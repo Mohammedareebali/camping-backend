@@ -21,7 +21,7 @@ firebase.initializeApp({
 app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
   next();
 });
 // Define the POST endpoint for sign-up
@@ -29,27 +29,24 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
   // Destructure the email and password from the request body
   const { email, password ,password2} = req.body;
  // Check if the passwords match
- const match = await bcrypt.compare(password, password2);
- console.log(password)
- console.log(password2)
- console.log(match)
  if (password !== password2) {
   return res.status(400).json({ error: 'Passwords do not match' });
 }
   try {
     // Generate a salt for bcrypt
-    const salt = await bcrypt.genSalt();
+    //const salt = await bcrypt.genSalt();
 
     // Hash the password using bcrypt
-    const hash = await bcrypt.hash(password, salt);
+    //const hash = await bcrypt.hash(password, salt);
 
     // Create a new user in Firebase with the email and hashed password
     const user = await firebase
       .auth()
-      .createUserWithEmailAndPassword(email, hash);
+      .createUserWithEmailAndPassword(email, password);
 
     // Generate a JSON Web Token (JWT) for the user
-    const token = jwt.sign({ userId: user.user?.uid }, 'secret_key',{expiresIn:'15s'});
+    const secret = 'secret_key';
+    const token = jwt.sign({ id: user.user?.uid}, secret,{expiresIn:'1h'});
 
     // Send the JWT in the response
     res.json({ token });
@@ -58,11 +55,54 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
     res.status(500).send(error.message);
   }
 });
+//login
+app.post('/login', async (req: express.Request, res: express.Response) => {
+  // Destructure the email and password from the request body
+  const { email, password } = req.body;
+
+  try {
+    // Authenticate the user using Firebase
+    const user = await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password);
+
+    // Generate a JSON Web Token (JWT) for the user
+    const token = jwt.sign({ id: user.user?.uid}, 'secret_key',{expiresIn:'1h'} );
+    // Send the JWT in the response
+    res.json({ token });
+  } catch (error) {
+    // If an error occurs, send a 401 status code and the error message
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+});
 
 app.get('/', (req: any, res: express.Response) => {
   res.send('Hello from Express!');
 });
+//logout
+app.post('/logout', (req, res) => {
+  // Get the JWT from the Authorization header
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: 'Missing Authorization header' });
+  }
+  const token = authHeader.replace('Bearer ', '');
+  if (!token) {
+    return res.status(401).json({ message: 'Missing token' });
+  }
 
+  // Verify and decode the JWT
+  try {
+    const payload = jwt.verify(token, 'secret_key');
+    // TODO: Do something with the payload, such as destroy the session in a database
+
+    // Respond with a success message
+    return res.json({ message: 'Logout successful' });
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+});
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
