@@ -1,10 +1,10 @@
-import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import express from 'express';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-
+import 'firebase/compat/firestore'; 
+ require('dotenv').config({path : './.env'});
+ require('./database/db.js');
 const app = express();
 
 // Initialize Firebase
@@ -72,7 +72,7 @@ app.post('/login', async (req: express.Request, res: express.Response) => {
     res.json({ token });
   } catch (error) {
     // If an error occurs, send a 401 status code and the error message
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: error });
   }
 });
 
@@ -103,6 +103,8 @@ app.post('/logout', (req, res) => {
     return res.status(401).json({ message: 'Invalid token' });
   }
 });
+const userRoutes = require('./routes/userRoutes')
+app.use(userRoutes);
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

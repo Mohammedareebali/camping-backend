@@ -31,6 +31,8 @@ const express_1 = __importDefault(require("express"));
 const app_1 = __importDefault(require("firebase/compat/app"));
 require("firebase/compat/auth");
 require("firebase/compat/firestore");
+require('dotenv').config({ path: './.env' });
+require('./database/db.js');
 const app = (0, express_1.default)();
 // Initialize Firebase
 app_1.default.initializeApp({
@@ -92,7 +94,7 @@ app.post('/login', async (req, res) => {
     }
     catch (error) {
         // If an error occurs, send a 401 status code and the error message
-        res.status(401).json({ error: 'Invalid credentials' });
+        res.status(401).json({ error: error });
     }
 });
 app.get('/', (req, res) => {
@@ -121,6 +123,8 @@ app.post('/logout', (req, res) => {
         return res.status(401).json({ message: 'Invalid token' });
     }
 });
+const userRoutes = require('./routes/userRoutes');
+app.use(userRoutes);
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
