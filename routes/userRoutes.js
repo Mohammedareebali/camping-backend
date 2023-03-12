@@ -4,7 +4,7 @@ const router = express.Router();
 const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 const authVerify = require('../middleware/authmiddleware');
-const { newCamp: postCamp, searchCampgrounds: search } = require('../controllers/userControls');
+const { newCamp: postCamp, searchCampgrounds: search, allCampgrounds: campgrounds } = require('../controllers/userControls');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 require('dotenv').config({ path: '../.env' });
@@ -35,5 +35,7 @@ const upload = multer({
 router.post('/createcamp', authVerify, upload.single('image'), postCamp);
 //post route to for search
 router.get('/search', search);
+// get all campgrounds
+router.get("/campgrounds", campgrounds);
 module.exports = router;
 //# sourceMappingURL=userRoutes.js.map

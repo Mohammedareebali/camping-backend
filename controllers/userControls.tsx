@@ -33,7 +33,18 @@ const searchCampgrounds = asynchandler(async (req: Request, res: Response) => {
   const query = req.query.q as string;
   const campgrounds = await Camp.search(query);
   res.json(campgrounds);
-})
+});
+const allCampgrounds = asynchandler(
+  async (req: any, res: { json: (arg0: any) => void; status: (arg0: number) => { (): any; new(): any; send: { (arg0: string): void; new(): any; }; }; }) => {
+    try {
+      const campgrounds = await Camp.find({});
+      res.json(campgrounds);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server Error");
+    }
+  }
+)
 module.exports = {
-    newCamp,searchCampgrounds
+    newCamp,searchCampgrounds,allCampgrounds
 }

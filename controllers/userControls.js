@@ -32,7 +32,17 @@ const searchCampgrounds = asynchandler(async (req, res) => {
     const campgrounds = await Camp.search(query);
     res.json(campgrounds);
 });
+const allCampgrounds = asynchandler(async (req, res) => {
+    try {
+        const campgrounds = await Camp.find({});
+        res.json(campgrounds);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+});
 module.exports = {
-    newCamp, searchCampgrounds
+    newCamp, searchCampgrounds, allCampgrounds
 };
 //# sourceMappingURL=userControls.js.map
