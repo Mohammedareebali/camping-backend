@@ -4,7 +4,7 @@ const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 
 const authVerify = require('../middleware/authmiddleware');
-const {newCamp:postCamp,searchCampgrounds:search,allCampgrounds:campgrounds} = require('../controllers/userControls');
+const {newCamp:postCamp,searchCampgrounds:search,allCampgrounds:campgrounds,getOneCamp:oneCamp} = require('../controllers/userControls');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 require('dotenv').config({path : '../.env'});
@@ -38,4 +38,6 @@ router.post('/createcamp', authVerify, upload.single('image'), postCamp);
 router.get('/search',search);
 // get all campgrounds
 router.get("/campgrounds", campgrounds );
+//get one campground 
+router.get("/campgrounds/:id", oneCamp);
 module.exports = router;

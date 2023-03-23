@@ -6,6 +6,11 @@ const campSchema = new mongooses.Schema({
     description: String,
     imageUrl: String,
     userId: String,
+    coordinates: [Number, Number],
+    bed: Number,
+    price: Number,
+    wifi: Boolean,
+    reviews: Number
 });
 campSchema.statics.search = function (query) {
     const regex = new RegExp(query, 'i');
