@@ -46,7 +46,7 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
 
     // Generate a JSON Web Token (JWT) for the user
     const secret = 'secret_key';
-    const token = jwt.sign({ id: user.user?.uid}, secret,{expiresIn:'1h'});
+    const token = jwt.sign({ userId: user.user?.uid}, secret,{expiresIn:'1h'});
 
     // Send the JWT in the response
     res.json({ token });
@@ -56,6 +56,7 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
   }
 });
 //login
+
 app.post('/login', async (req: express.Request, res: express.Response) => {
   // Destructure the email and password from the request body
   const { email, password } = req.body;
@@ -67,7 +68,7 @@ app.post('/login', async (req: express.Request, res: express.Response) => {
       .signInWithEmailAndPassword(email, password);
 
     // Generate a JSON Web Token (JWT) for the user
-    const token = jwt.sign({ id: user.user?.uid}, 'secret_key',{expiresIn:'1h'} );
+    const token = jwt.sign({ userId: user.user?.uid}, 'secret_key',{expiresIn:'1h'} );
     // Send the JWT in the response
     res.json({ token });
   } catch (error) {

@@ -14,9 +14,10 @@ const campSchema = new mongooses.Schema({
 
 campSchema.statics.search = function (query: string) {
   const regex = new RegExp(query, 'i');
-  return this.find({
-    $or: [{ name: regex }, { location: regex }, { description: regex }],
-  });
+  return this.find(({
+    $or: [ { location: regex }],
+  }) as any);
 };
+
 
 module.exports = mongooses.model('Camp', campSchema);

@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 const fetch = require("node-fetch");
 
 const Camp = require('../models/campmodel');
+const Review = require('../models/Review');
 // create new camp
 
 const geocode = asynchandler( async (location: string) => {
@@ -15,11 +16,11 @@ const geocode = asynchandler( async (location: string) => {
   return [longitude, latitude];
 });
 
-const newCamp = asynchandler(async (req: { body: { name: any; location: any; description: any; bed:any;price:any;reviews:any;wifi:any }; file: { location: any; }; userId: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): void; new(): any; }; }; }) => {
-  const { name, location, description,bed,reviews,wifi,price } = req.body;
+const newCamp = asynchandler(async (req: { body: {  name: any; location: any; description: any; bed:any;price:any;reviews:any;wifi:any }; file: { location: any; }; userId: any; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): void; new(): any; }; }; }) => {
+  const { name, location, description,bed,reviews,wifi,price, } = req.body;
   const imageUrl = req.file.location;
   const userId = req.userId;
-  console.log(req.body)
+  console.log(userId)
 console.log(price)
   try {
     const coordinates = await geocode(location); // get coordinates using Mapbox geocoding
@@ -49,10 +50,43 @@ console.log(price)
 //search
 const searchCampgrounds = asynchandler(async (req: Request, res: Response) => {
   const query = req.query.q as string;
-  const campgrounds = await Camp.search(query);
+  const perPage = 4;
+  const page = Number(req.query.page) || 1;
 
-  res.json(campgrounds);
+  try {
+    const count = await Camp.search(query).countDocuments().exec();
+    const totalPages = Math.ceil(count / perPage);
+    const current = Math.min(page, totalPages);
+
+    // Ensure that skip value is greater than or equal to 0
+    const skipValue = (perPage * current) - perPage;
+    const skip = Math.max(0, skipValue);
+
+    const campgrounds = await Camp.search(query)
+      .skip(skip)
+      .limit(perPage)
+      .exec();
+
+    res.json({
+      campgrounds,
+      current,
+      pages: totalPages
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
+
+
+  
+  
+  
+  
+  
+  
 
 //all camogrounds
 const allCampgrounds = asynchandler(async (req: any, res: { json: (arg0: { campgrounds: any; current: number; pages: number }) => void; status: (arg0: number) => { (): any; new(): any; send: { (arg0: string): void; new(): any; }; }; }) => {
@@ -71,7 +105,7 @@ const allCampgrounds = asynchandler(async (req: any, res: { json: (arg0: { campg
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Internal Server Erro');
   }
 });
 
@@ -92,6 +126,37 @@ const getOneCamp = asynchandler(
     }
   }
 )
+// create review function
+const createReview = asynchandler( async (req: {
+   body: { emojiRating: any; comment: any; campgroundId:any; }; userId: any;
+},res: any) => {
+  try {
+    const userId = req.userId;
+    const { emojiRating, comment,campgroundId } = req.body;
+    const review = new Review({ campgroundId ,emojiRating, comment,postedBy:userId });
+    await review.save();
+    res.status(201).json({
+      emojiRating,
+      comment,
+      campgroundId,
+      userId
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
+// get review accroding to campground id 
+const getReviewsByCampgroundId = async (req: Request, res: Response) => {
+  try {
+    const campgroundId = req.params.id;
+    const reviews = await Review.find({ campgroundId }).populate('postedBy', 'username');
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+};
 module.exports = {
-    newCamp,searchCampgrounds,allCampgrounds,getOneCamp
+    newCamp,searchCampgrounds,allCampgrounds,getOneCamp,createReview,getReviewsByCampgroundId
 }

@@ -4,7 +4,7 @@ const multer = require('multer');
 const { S3Client } = require('@aws-sdk/client-s3');
 
 const authVerify = require('../middleware/authmiddleware');
-const {newCamp:postCamp,searchCampgrounds:search,allCampgrounds:campgrounds,getOneCamp:oneCamp} = require('../controllers/userControls');
+const {getReviewsByCampgroundId:reviewsByCampgroundId,newCamp:postCamp,searchCampgrounds:search,allCampgrounds:campgrounds,getOneCamp:oneCamp ,createReview:review} = require('../controllers/userControls');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 require('dotenv').config({path : '../.env'});
@@ -32,8 +32,14 @@ const s3 = new S3Client({
       },
     }),
   });
+
+// login route
+router.route('/login').get((req: any, res: { send: (arg0: string) => void; }) => {
+  res.send('Create Camp');
+})
 // POST route to create a new camp
-router.post('/createcamp', authVerify, upload.single('image'), postCamp);
+router
+  .post('/camps',authVerify, upload.single('file'), postCamp);
 //post route to for search
 router.get('/search',search);
 // get all campgrounds
@@ -41,3 +47,7 @@ router.get("/campgrounds", campgrounds );
 //get one campground 
 router.get("/campgrounds/:id", oneCamp);
 module.exports = router;
+// POST  route to create a new review 
+router.post('/review',authVerify,review);
+// get route for related review 
+router.route('/campgrounds/:id/reviews').get(reviewsByCampgroundId);
