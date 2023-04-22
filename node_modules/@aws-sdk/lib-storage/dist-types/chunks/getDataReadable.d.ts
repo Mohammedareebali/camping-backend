@@ -1,3 +1,4 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { Readable } from "stream";
 export declare function getDataReadable(data: Readable): AsyncGenerator<Buffer>;

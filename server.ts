@@ -1,11 +1,11 @@
-import * as jwt from 'jsonwebtoken';
-import express from 'express';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore'; 
- require('dotenv').config({path : './.env'});
- require('./database/db.js');
-const app = express();
+const jwts = require('jsonwebtoken');
+const exp = require('express');
+const firebase = require('firebase/compat/app');
+require('firebase/compat/auth');
+require('firebase/compat/firestore');
+require('dotenv').config({path : './.env'});
+require('./database/db.js');
+const app = exp();
 
 // Initialize Firebase
 firebase.initializeApp({
@@ -18,14 +18,14 @@ firebase.initializeApp({
 })
 
 // Use JSON as the request body parser
-app.use(express.json());
-app.use((req, res, next) => {
+app.use(exp.json());
+app.use((req: any, res: { header: (arg0: string, arg1: string) => void; }, next: () => void) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
   next();
 });
 // Define the POST endpoint for sign-up
-app.post('/signup', async (req: express.Request, res: express.Response) => {
+app.post('/signup', async (req: any, res: any) => {
   // Destructure the email and password from the request body
   const { email, password ,password2} = req.body;
  // Check if the passwords match
@@ -46,7 +46,7 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
 
     // Generate a JSON Web Token (JWT) for the user
     const secret = 'secret_key';
-    const token = jwt.sign({ userId: user.user?.uid}, secret,{expiresIn:'1h'});
+    const token = jwts.sign({ userId: user.user?.uid}, secret,{expiresIn:'1h'});
 
     // Send the JWT in the response
     res.json({ token });
@@ -57,7 +57,7 @@ app.post('/signup', async (req: express.Request, res: express.Response) => {
 });
 //login
 
-app.post('/login', async (req: express.Request, res: express.Response) => {
+app.post('/login', async (req: any, res: any) => {
   // Destructure the email and password from the request body
   const { email, password } = req.body;
 
@@ -68,7 +68,7 @@ app.post('/login', async (req: express.Request, res: express.Response) => {
       .signInWithEmailAndPassword(email, password);
 
     // Generate a JSON Web Token (JWT) for the user
-    const token = jwt.sign({ userId: user.user?.uid}, 'secret_key',{expiresIn:'1h'} );
+    const token = jwts.sign({ userId: user.user?.uid}, 'secret_key',{expiresIn:'1h'} );
     // Send the JWT in the response
     res.json({ token });
   } catch (error) {
@@ -77,11 +77,11 @@ app.post('/login', async (req: express.Request, res: express.Response) => {
   }
 });
 
-app.get('/', (req: any, res: express.Response) => {
-  res.send('Hello from Express!');
+app.get('/', (req: any, res: any) => {
+  res.send('Hello from Express!!');
 });
 //logout
-app.post('/logout', (req, res) => {
+app.post('/logout', (req: { headers: { authorization: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): any; new(): any; }; }; json: (arg0: { message: string; }) => any; }) => {
   // Get the JWT from the Authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -94,7 +94,7 @@ app.post('/logout', (req, res) => {
 
   // Verify and decode the JWT
   try {
-    const payload = jwt.verify(token, 'secret_key');
+    const payload = jwts.verify(token, 'secret_key');
     // TODO: Do something with the payload, such as destroy the session in a database
 
     // Respond with a success message
@@ -107,6 +107,6 @@ app.post('/logout', (req, res) => {
 const userRoutes = require('./routes/userRoutes')
 app.use(userRoutes);
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+app.listen(5000, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });
