@@ -5,7 +5,7 @@
   "main": "index.js",
   "proxy": "http://frontend:3000",
   "engines": {
-    "node": "18.16.0"
+    "node": "16"
   },
   "scripts": {
     "start": "nodemon --exec ts-node server.ts",
