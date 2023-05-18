@@ -109,7 +109,7 @@ app.post('/api/logout', (req, res) => {
 });
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
-const port = process.env.PORT;
+const port = process.env.PORT || 5001;
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });
