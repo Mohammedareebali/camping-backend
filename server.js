@@ -109,8 +109,8 @@ app.post('/api/logout', (req, res) => {
 });
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
-const port = 5000;
-app.listen(5000, '0.0.0.0', () => {
+const port = process.env.PORT || 5000;
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });
 //# sourceMappingURL=server.js.map
