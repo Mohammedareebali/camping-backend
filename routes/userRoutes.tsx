@@ -18,7 +18,6 @@ const s3 = new S3Client({
     s3ForcePathStyle: true,
     signatureVersion: 'v4',
   });
-  
   const upload = multer({
     storage: multerS3({
       s3: s3,
@@ -39,15 +38,15 @@ router.route('/login').get((req: any, res: { send: (arg0: string) => void; }) =>
 })
 // POST route to create a new camp
 router
-  .post('/camps',authVerify, upload.single('file'), postCamp);
+  .post('/api/camps',authVerify, upload.single('file'), postCamp);
 //post route to for search
-router.get('/search',search);
+router.get('/api/search',search);
 // get all campgrounds
-router.get("/campgrounds", campgrounds );
+router.get("/api/campgrounds", campgrounds );
 //get one campground 
-router.get("/campgrounds/:id", oneCamp);
+router.get("/api/campgrounds/:id", oneCamp);
 module.exports = router;
 // POST  route to create a new review 
-router.post('/review',authVerify,review);
+router.post('/api/review',authVerify,review);
 // get route for related review 
-router.route('/campgrounds/:id/reviews').get(reviewsByCampgroundId);
+router.route('/api/campgrounds/:id/reviews').get(reviewsByCampgroundId);

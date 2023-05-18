@@ -74,7 +74,7 @@ const searchCampgrounds = asynchandler((req, res) => __awaiter(void 0, void 0, v
     }
     catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send(error);
     }
 }));
 //all camogrounds
@@ -95,7 +95,7 @@ const allCampgrounds = asynchandler((req, res) => __awaiter(void 0, void 0, void
     }
     catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Erro');
+        res.status(500).send('Internal Server Error');
     }
 }));
 //get one camp

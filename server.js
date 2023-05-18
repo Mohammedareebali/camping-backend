@@ -28,12 +28,12 @@ firebase.initializeApp({
 // Use JSON as the request body parser
 app.use(exp.json());
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
     next();
 });
 // Define the POST endpoint for sign-up
-app.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/api/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     // Destructure the email and password from the request body
     const { email, password, password2 } = req.body;
@@ -62,7 +62,7 @@ app.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 }));
 //login
-app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/api/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     // Destructure the email and password from the request body
     const { email, password } = req.body;
@@ -85,7 +85,7 @@ app.get('/', (req, res) => {
     res.send('Hello from Express!!');
 });
 //logout
-app.post('/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
     // Get the JWT from the Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -109,7 +109,7 @@ app.post('/logout', (req, res) => {
 });
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
-const port = process.env.PORT || 5000;
+const port = 5000;
 app.listen(5000, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });

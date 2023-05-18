@@ -5,6 +5,7 @@ require('firebase/compat/auth');
 require('firebase/compat/firestore');
 require('dotenv').config({path : './.env'});
 require('./database/db.js');
+
 const app = exp();
 
 // Initialize Firebase
@@ -20,12 +21,12 @@ firebase.initializeApp({
 // Use JSON as the request body parser
 app.use(exp.json());
 app.use((req: any, res: { header: (arg0: string, arg1: string) => void; }, next: () => void) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
   next();
 });
 // Define the POST endpoint for sign-up
-app.post('/signup', async (req: any, res: any) => {
+app.post('/api/signup', async (req: any, res: any) => {
   // Destructure the email and password from the request body
   const { email, password ,password2} = req.body;
  // Check if the passwords match
@@ -57,7 +58,7 @@ app.post('/signup', async (req: any, res: any) => {
 });
 //login
 
-app.post('/login', async (req: any, res: any) => {
+app.post('/api/login', async (req: any, res: any) => {
   // Destructure the email and password from the request body
   const { email, password } = req.body;
 
@@ -81,7 +82,7 @@ app.get('/', (req: any, res: any) => {
   res.send('Hello from Express!!');
 });
 //logout
-app.post('/logout', (req: { headers: { authorization: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): any; new(): any; }; }; json: (arg0: { message: string; }) => any; }) => {
+app.post('/api/logout', (req: { headers: { authorization: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { message: string; }): any; new(): any; }; }; json: (arg0: { message: string; }) => any; }) => {
   // Get the JWT from the Authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader) {
@@ -106,7 +107,7 @@ app.post('/logout', (req: { headers: { authorization: any; }; }, res: { status: 
 });
 const userRoutes = require('./routes/userRoutes')
 app.use(userRoutes);
-const port = process.env.PORT || 5000;
+const port = 5000;
 app.listen(5000, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
 });

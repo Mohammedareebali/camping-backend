@@ -75,7 +75,7 @@ const searchCampgrounds = asynchandler(async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(error);
   }
 });
 
@@ -105,7 +105,7 @@ const allCampgrounds = asynchandler(async (req: any, res: { json: (arg0: { campg
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Erro');
+    res.status(500).send('Internal Server Error');
   }
 });
 
