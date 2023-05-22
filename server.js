@@ -28,7 +28,7 @@ firebase.initializeApp({
 // Use JSON as the request body parser
 app.use(exp.json());
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "https://vercel.com/mohammedareebali/yelpcamp");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
     next();
 });
