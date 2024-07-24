@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.ts",
+<<<<<<< HEAD
   "proxy": "https://yelpcamp-gray.vercel.app/",
+=======
+  "proxy": "http://frontend:3000",
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
   "engines": {
     "node": "16.13.2"
   },
@@ -20,7 +24,10 @@
     "@types/firebase": "^3.2.1",
     "aws-sdk": "^2.1373.0",
     "basic-auth-connect": "^1.0.0",
+<<<<<<< HEAD
     "cors": "^2.8.5",
+=======
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",

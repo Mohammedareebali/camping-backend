@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 {
     "watch": ["."],
     "ext": "ts",
     "ignore": [ "node_modules"]
   }
+=======
+{
+    "watch": ["."],
+    "ext": "ts",
+    "ignore": [ "node_modules"]
+  }
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
   

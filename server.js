@@ -27,12 +27,20 @@ firebase.initializeApp({
 });
 // Use JSON as the request body parser
 app.use(exp.json());
+<<<<<<< HEAD
 const cors = require('cors');
 app.use(cors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Content-Type']
 }));
+=======
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://yelpcamp-gray.vercel.app");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,content-type");
+    next();
+});
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
 // Define the POST endpoint for sign-up
 app.post('/api/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -83,7 +91,11 @@ app.post('/api/login', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 app.get('/', (req, res) => {
+<<<<<<< HEAD
     res.send('Hi from Express!!');
+=======
+    res.send('Hello from Express!!');
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
 });
 //logout
 app.post('/api/logout', (req, res) => {
@@ -111,7 +123,11 @@ app.post('/api/logout', (req, res) => {
 const userRoutes = require('./routes/userRoutes');
 app.use(userRoutes);
 const port = process.env.PORT || 5001;
+<<<<<<< HEAD
 app.listen(port, () => {
+=======
+app.listen(port, '0.0.0.0', () => {
+>>>>>>> 0398bde3af126cb0b9c5c09af466e85b496f485e
     console.log(`Server running on port ${port}`);
 });
 //# sourceMappingURL=server.js.map
